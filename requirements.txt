@@ -1,0 +1,68 @@
+# ==========================================
+# 1. CORE WEB FRAMEWORK & API
+# ==========================================
+fastapi==0.135.2
+uvicorn==0.34.0
+starlette==1.0.0
+pydantic==2.12.5
+pydantic-settings==2.13.1
+pydantic_core==2.41.5
+python-multipart==0.0.22
+
+# ==========================================
+# 2. DATABASE & MIGRATIONS (PostgreSQL / Neon)
+# ==========================================
+SQLAlchemy==2.0.48
+alembic==1.13.1
+psycopg2-binary==2.9.9
+greenlet==3.3.2
+
+# ==========================================
+# 3. CACHING & BACKGROUND WORKERS (Redis & Celery)
+# ==========================================
+redis>=5.0.0
+celery>=5.3.6
+
+# ==========================================
+# 4. AUTHENTICATION & SECURITY
+# ==========================================
+python-jose==3.5.0
+passlib==1.7.4
+bcrypt==4.0.1
+cryptography==46.0.6
+email-validator==2.3.0
+ecdsa==0.19.2
+rsa==4.9.1
+pyasn1==0.6.3
+
+# ==========================================
+# 5. HTTP CLIENT & UTILITIES
+# ==========================================
+httpx>=0.24.0
+python-dotenv==1.2.2
+fpdf2==2.8.2
+dnspython==2.8.0
+idna==3.11
+
+# ==========================================
+# 6. TESTING & DEVELOPMENT TOOLS
+# ==========================================
+pytest==9.0.2
+pytest-env==1.6.0
+iniconfig==2.3.0
+pluggy==1.6.0
+Pygments==2.20.0
+
+# ==========================================
+# 7. LOW-LEVEL TRANSITIVE DEPENDENCIES
+# ==========================================
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.13.0
+cffi==2.0.0
+colorama==0.4.6
+packaging==26.0
+pycparser==3.0
+six==1.17.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
