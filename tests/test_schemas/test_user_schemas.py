@@ -1,3 +1,4 @@
+from schemas.user_schemas import UserRole
 from schemas.user_schemas import UserCreate, UserUpdate, UserRead
 import pytest
 import logging 
@@ -9,7 +10,7 @@ def test_user_create():
         user = UserCreate(
             email = 'NkYg5@example.com',
             password = 'password',
-            role = 'STUDENT'
+            role = UserRole.STUDENT
         )
         logger.info(f"UserCreate instance created successfully: {user}") 
     except Exception as e:

@@ -1,2 +1,14 @@
 test:
 	pytest -s
+test-repo:
+	pytest -s tests/test_repo 
+test-services:
+	pytest -s tests/test_services
+test-db:
+	pytest -s tests/test_db
+test-schemas:
+	pytest -s tests/test_schemas
+test-core: 
+	pytest -s tests/test_core
+test-api:
+	pytest -s tests/test_api

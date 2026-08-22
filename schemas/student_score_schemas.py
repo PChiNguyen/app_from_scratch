@@ -6,15 +6,17 @@ import re
 
 class StudentScoreBase(BaseModel):
     student_id: UUID
-    skill_id: UUID
+    skill_id: int 
     score: band_score 
 
 class StudentScoreCreate(StudentScoreBase):
     pass
 
 class StudentScoreUpdate(StudentScoreBase):
-    skill_id: Optional[UUID]
-    score: Optional[band_score] 
+    skill_id: Optional[int] = None
+    score: Optional[band_score] = None
 
 class StudentScoreResponse(StudentScoreBase):
     id: UUID      
+
+    model_config = ConfigDict(from_attributes=True)  

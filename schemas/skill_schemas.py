@@ -5,7 +5,7 @@ from typing import Optional
 import re  
 
 class SkillBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=255)
+    name: Skill 
 
 class SkillCreate(SkillBase):
     pass   

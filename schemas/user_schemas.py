@@ -12,9 +12,9 @@ class UserCreate(UserBase):
     password: str = Field(..., min_length=8, max_length=255)
 
 class UserUpdate(BaseModel):
-    email: Optional[EmailStr]
-    role: Optional[UserRole]
-    password: Optional[str] = Field(None, min_length=8, max_length=255)  
+    email: Optional[EmailStr]= None
+    role: Optional[UserRole] = None
+    password: Optional[str] = Field(None, min_length=8, max_length=255)
 class UserRead(UserBase):
     id: UUID
 

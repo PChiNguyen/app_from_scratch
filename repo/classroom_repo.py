@@ -1,0 +1,51 @@
+from db.models.classroom import Classroom 
+from sqlalchemy.orm import Session 
+import uuid 
+
+
+class ClassroomRepo:
+    def __init__(self, db_session: Session):
+        self.db_session = db_session
+
+    def create_classroom(self, **kwargs):
+        classroom = Classroom(**kwargs)
+        self.db_session.add(classroom)
+        self.db_session.commit()
+        return classroom  
+
+    def get_classroom_by_id(self, classroom_id: uuid.UUID):
+        return self.db_session.query(Classroom).filter(Classroom.id == classroom_id).first()
+
+    def get_classroom_by_name(self, classroom_name: str):
+        return self.db_session.query(Classroom).filter(Classroom.name == classroom_name).first()
+    def get_classroom_by_teacher_id(self, teacher_id: uuid.UUID):
+        return self.db_session.query(Classroom).filter(Classroom.teacher_id == teacher_id).all()
+
+    def get_all_classrooms(self):
+        return self.db_session.query(Classroom).all() 
+
+    def update_classroom(self, classroom_id: uuid.UUID, **kwargs):
+        classroom = self.db_session.query(Classroom).filter(Classroom.id == classroom_id).first()
+        for key, value in kwargs.items():
+            if hasattr(classroom, key):
+                setattr(classroom, key, value)
+        try: 
+            self.db_session.commit()
+            self.db_session.refresh(classroom) 
+            return classroom
+        except Exception as e:
+            self.db_session.rollback()
+            raise e  
+  
+
+    def delete_classroom(self, classroom_id: uuid.UUID):
+        try: 
+            classroom = self.get_classroom_by_id(classroom_id)
+            self.db_session.delete(classroom)
+            self.db_session.commit()
+            return True
+        except Exception as e:
+            self.db_session.rollback()
+            raise e 
+
+
