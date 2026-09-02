@@ -1,6 +1,7 @@
 from db.models.classroom import Classroom 
 from sqlalchemy.orm import Session 
 import uuid 
+from core.exceptions import DatabaseValidationError, ResourceNotFoundError   
 
 
 class ClassroomRepo:
@@ -8,10 +9,16 @@ class ClassroomRepo:
         self.db_session = db_session
 
     def create_classroom(self, **kwargs):
-        classroom = Classroom(**kwargs)
-        self.db_session.add(classroom)
-        self.db_session.commit()
-        return classroom  
+        try: 
+            classroom = Classroom(**kwargs)
+            self.db_session.add(classroom)
+            self.db_session.commit()
+            self.db_session.refresh(classroom) 
+            return classroom  
+        except Exception as e: 
+            self.db_session.rollback()
+            raise DatabaseValidationError(message=f"Failed to create classroom: {e}")
+
 
     def get_classroom_by_id(self, classroom_id: uuid.UUID):
         return self.db_session.query(Classroom).filter(Classroom.id == classroom_id).first()
@@ -21,7 +28,7 @@ class ClassroomRepo:
     def get_classroom_by_teacher_id(self, teacher_id: uuid.UUID):
         return self.db_session.query(Classroom).filter(Classroom.teacher_id == teacher_id).all()
 
-    def get_all_classrooms(self):
+    def get_all_classrooms(self, skip: int = 0, limit: int = 100):
         return self.db_session.query(Classroom).all() 
 
     def update_classroom(self, classroom_id: uuid.UUID, **kwargs):

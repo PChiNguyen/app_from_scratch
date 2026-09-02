@@ -9,6 +9,7 @@ from repo.user_repo import UserRepo
 from fastapi import HTTPException
 import uuid 
 import logging
+from core.exceptions import ResourceNotFoundError 
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,7 @@ def test_create_classroom_sucess(classroom_service: ClassroomService, mock_user:
 
 def test_create_classroom_failure(classroom_service: ClassroomService, mock_user: User):
     classroom_info = ClassroomCreate(name=Type.number1_, teacher_id=uuid.uuid4())
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(ResourceNotFoundError) as exc_info:
         classroom_service.create_classroom(classroom_info)
     assert exc_info.value.status_code == 404 
-    logger.error(f"Failed to create classroom: {exc_info.value}")
+    logger.error(f"Failed to create classroom: {exc_info.value}") 

@@ -5,6 +5,7 @@ from schemas.classroom_schemas import ClassroomCreate, ClassroomUpdate
 from fastapi import HTTPException 
 from db.models.classroom import Type
 import uuid 
+from core.exceptions import DatabaseValidationError, ResourceNotFoundError 
 
 
 class ClassroomService:
@@ -14,9 +15,13 @@ class ClassroomService:
 
     def create_classroom(self, classroom_info: ClassroomCreate):
         if not self.user_repo.get_user_by_id(classroom_info.teacher_id):
-            raise HTTPException(status_code=404, detail="Teacher not found")
+            raise ResourceNotFoundError(message="Teacher not found")    
         classroom = self.classroom_repo.create_classroom(**classroom_info.model_dump(exclude_unset=True))
         return classroom
+
+    def get_all_classrooms(self, skip: int = 0, limit: int = 100):
+        classrooms = self.classroom_repo.get_all_classrooms()
+        return classrooms
 
     def get_classroom_by_id(self, classroom_id: uuid.UUID):
         classroom = self.classroom_repo.get_classroom_by_id(classroom_id)

@@ -29,5 +29,19 @@ class Classroom(Base):
     students = relationship('Student', back_populates='classroom', cascade='all, delete-orphan')
 
 
+    @validates('name') 
+    def validate_name(self, key, name): 
+        if isinstance(name, str): 
+            try:
+                name= Type(name.lower()) 
+                return name
+            except ValueError:
+                raise ValueError(f'{name} is not a valid classroom name')
+        if not isinstance(name, Type): 
+            raise TypeError(f'{name} should be of type {Type.number1_} or {Type.number2_} or {Type.number3_} or {Type.number4_}')    
+            
+             
+            
 
+            
 

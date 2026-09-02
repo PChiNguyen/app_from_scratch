@@ -17,7 +17,14 @@ from services.user_service import UserService
 from schemas.user_schemas import UserCreate 
 from api.deps import get_current_user 
 
- 
+
+ # tests/conftest.py
+import pytest
+import os
+from dotenv import load_dotenv
+
+# 🟢 Nạp tệp .env ngay khi pytest khởi chạy
+load_dotenv()
 
 
 logging.basicConfig(

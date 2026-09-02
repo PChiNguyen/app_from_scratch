@@ -7,7 +7,7 @@ import re
 
 
 class ClassroomBase(BaseModel): 
-    name: Type 
+    name: str 
     teacher_id: UUID   
 
 
