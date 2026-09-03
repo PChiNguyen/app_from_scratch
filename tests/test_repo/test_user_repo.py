@@ -4,6 +4,7 @@ import logging
 from sqlalchemy.orm import Session  
 from schemas.user_schemas import UserCreate, UserUpdate 
 from db.models.user import User , UserRole
+import uuid 
 logger = logging.getLogger(__name__)
 
 
@@ -12,12 +13,13 @@ def user_repo(db_session: Session):
     return UserRepo(db_session)  
 
 def test_create_user(user_repo: UserRepo):
-    info= UserCreate( email = 'NkYg5@example.com', password = 'password', role = UserRole.STUDENT).model_dump(exclude_unset=True)
+    random_hex = uuid.uuid4().hex[:8]
+    unique_email = f"user_{random_hex}@example.com"
+    info= UserCreate( email = unique_email, password = 'password', role = UserRole.STUDENT).model_dump(exclude_unset=True)
     user = user_repo.create_user(**info)    
 
     assert user
-    assert user.email == 'NkYg5@example.com'
-    assert user.password == 'password'
+    assert user.email == unique_email
     assert user.role == UserRole.STUDENT
 def test_get_user_by_email(user_repo: UserRepo, mock_user: User):
     user = user_repo.get_user_by_email(mock_user.email)

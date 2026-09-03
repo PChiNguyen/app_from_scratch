@@ -12,3 +12,11 @@ test-core:
 	pytest -s tests/test_core
 test-api:
 	pytest -s tests/test_api
+
+
+
+watch:
+	python -m pytest_watch -- --cov=. --cov-report=term-missing --cov-report=xml 
+
+run:
+	python -m uvicorn main:app --reload 

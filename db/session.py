@@ -5,7 +5,7 @@ from sqlalchemy import event
 from sqlalchemy.engine import Engine
 import logging     
 logger= logging.getLogger(__name__)   
-engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, echo= True)
+engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, echo= False)
 
 Sessionlocal= sessionmaker(bind= engine, autocommit= False, autoflush= False) 
 

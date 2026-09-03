@@ -37,6 +37,8 @@ class Classroom(Base):
                 return name
             except ValueError:
                 raise ValueError(f'{name} is not a valid classroom name')
+        if isinstance(name, Type): 
+            return name
         if not isinstance(name, Type): 
             raise TypeError(f'{name} should be of type {Type.number1_} or {Type.number2_} or {Type.number3_} or {Type.number4_}')    
             
