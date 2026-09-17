@@ -19,7 +19,7 @@ def create_student(
     current_user: User = Depends(get_current_teacher),
 ):
     service = StudentService(db)
-    return service.create_student(student_info, current_user.id) 
+    return service.create_student(student_info) 
 
 @router.get("", response_model=List[StudentRead])
 def read_all_students(

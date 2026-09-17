@@ -3,7 +3,7 @@ import pytest
 import logging 
 from sqlalchemy.orm import Session  
 from schemas.student_schemas import StudentCreate, StudentUpdate 
-from db.models.student import Student, ovr_aim 
+from db.models.student import Student, OverallAim  
 from db.models.classroom import Classroom 
 import uuid 
 logger = logging.getLogger(__name__) 
@@ -14,11 +14,11 @@ def student_repo(db_session: Session):
 
 
 def test_create_student(student_repo: StudentRepo, mock_classroom: Classroom): 
-    student_info = StudentCreate(name="John Doe", overall_aim=ovr_aim.aim1, classroom_id=mock_classroom.id).model_dump(exclude_unset=True)
+    student_info = StudentCreate(name="John Doe", overall_aim=OverallAim.AIM_6_0, classroom_id=mock_classroom.id).model_dump(exclude_unset=True)
     student = student_repo.create_student(**student_info) 
     assert student 
     assert student.name == "John Doe"
-    assert student.overall_aim == ovr_aim.aim1 
+    assert student.overall_aim == OverallAim.AIM_6_0
 
 
 def test_get_student_by_id(student_repo: StudentRepo, mock_student: Student):

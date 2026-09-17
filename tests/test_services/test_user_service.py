@@ -1,5 +1,6 @@
 import pytest 
 import logging
+from core.exceptions import ConflictError, ResourceNotFoundError
 from services.user_service import UserService 
 from sqlalchemy.orm import Session 
 from schemas.user_schemas import UserCreate, UserUpdate
@@ -28,7 +29,7 @@ def test_create_user(user_service: UserService):
 
 def test_create_user_fail(user_service: UserService,mock_user: User):
     info= UserCreate( email = mock_user.email, password = 'password', role = UserRole.STUDENT)
-    with pytest.raises(HTTPException) as e:
+    with pytest.raises(ConflictError) as e:
         user = user_service.create_user(info)
     logger.error(f"Error creating user: {e}")   
 

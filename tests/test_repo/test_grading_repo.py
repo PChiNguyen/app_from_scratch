@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from db.models.classroom import Classroom
 from db.models.skill import Skill, SkillModel
 from db.models.student import Student
-from db.models.student_score import StudentScore, band_score
+from db.models.student_score import StudentScore, BandScore 
 from repo.grading_repo import GradingRepo
 
 logger = logging.getLogger(__name__)

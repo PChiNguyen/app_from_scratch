@@ -1,7 +1,7 @@
 from schemas.student_schemas import StudentCreate, StudentUpdate, StudentRead
 import pytest   
 import logging 
-from db.models.student import Student, ovr_aim 
+from db.models.student import Student, OverallAim
 import uuid 
 
 logger = logging.getLogger(__name__)
@@ -10,7 +10,7 @@ def test_student_create():
     try:
         student = StudentCreate(
             name = 'John Doe',
-            overall_aim = ovr_aim.aim1,
+            overall_aim = OverallAim.AIM_6_0,
             classroom_id = uuid.uuid4()
         )
         logger.info(f"StudentCreate instance created successfully: {student}")

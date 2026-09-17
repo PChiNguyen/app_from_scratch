@@ -1,17 +1,22 @@
-from services.student_score_service import StudentScoreService 
-from fastapi import APIRouter, Depends, HTTPException, status 
-from sqlalchemy.orm import Session 
-from db.models.user import User 
-from api.deps import get_db, get_current_teacher 
-from schemas.student_score_schemas import StudentScoreCreate, StudentScoreUpdate, StudentScoreResponse   
-import uuid 
 from typing import List
+import uuid
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from api.deps import get_current_teacher, get_db
+from db.models.user import User
+from schemas.student_score_schemas import (
+    StudentScoreCreate,
+    StudentScoreResponse,
+    StudentScoreUpdate,
+)
+from services.student_score_service import StudentScoreService
+
+router = APIRouter()
 
 
-
-router = APIRouter() 
-
-@router.post("", response_model= StudentScoreResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=StudentScoreResponse, status_code=status.HTTP_201_CREATED)
 def create_student_score(
     *,
     student_score_info: StudentScoreCreate,
@@ -19,8 +24,10 @@ def create_student_score(
     current_user: User = Depends(get_current_teacher),
 ):
     service = StudentScoreService(db)
-    return service.create_student_score(student_score_info, current_user.id)
+    return service.create_student_score(student_score_info)
 
+
+# 1. Get score by Score ID (UUID)
 @router.get('/{student_score_id}', response_model=StudentScoreResponse)
 def read_student_score(
     *,
@@ -37,7 +44,9 @@ def read_student_score(
         )
     return student_score
 
-@router.get('/{skill_id}', response_model=List[StudentScoreResponse])
+
+# 2. Added '/skill/' prefix to avoid collision with UUID route
+@router.get('/skill/{skill_id}', response_model=List[StudentScoreResponse])
 def read_student_scores_by_skill_id(
     *,
     skill_id: int,
@@ -53,7 +62,9 @@ def read_student_scores_by_skill_id(
         )
     return student_scores
 
-@router.get('/{student_id}', response_model=List[StudentScoreResponse])
+
+# 3. Added '/student/' prefix to avoid collision with other routes
+@router.get('/student/{student_id}', response_model=List[StudentScoreResponse])
 def read_student_scores_by_student_id(
     *,
     student_id: uuid.UUID,
@@ -87,6 +98,7 @@ def update_student_score(
         )
     return student_score
 
+
 @router.delete('/{student_score_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_student_score(
     *,
@@ -101,4 +113,4 @@ def delete_student_score(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Student score not found",
         )
-    return None      
+    return None

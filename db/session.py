@@ -1,31 +1,40 @@
-from sqlalchemy import create_engine 
-from sqlalchemy.orm import sessionmaker 
-from core.config import settings 
-from sqlalchemy import event
-from sqlalchemy.engine import Engine
-import logging     
-logger= logging.getLogger(__name__)   
-engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, echo= False)
+import logging
+import os
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from core.config import settings
 
-Sessionlocal= sessionmaker(bind= engine, autocommit= False, autoflush= False) 
+# Load environment variables for standalone script execution
+load_dotenv()
+
+logger = logging.getLogger(__name__)
+
+# Resolve database URL from settings or directly from .env
+DATABASE_URL = os.getenv("DATABASE_URL") or getattr(settings, "SQLALCHEMY_DATABASE_URL", None)
+
+engine = create_engine(DATABASE_URL, echo=False)
+
+Sessionlocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 def get_db():
-    db= Sessionlocal()
+    db = Sessionlocal()
     try:
         yield db
     finally:
         db.close()
-try: 
+
+# Connection check
+try:
     with engine.connect() as connection:
         logger.info("Database connection successful")
 except Exception as e:
-    logger.error(f"Database connection failed: {e}") 
+    logger.error(f"Database connection failed: {e}")
 
-try: 
-    db= Sessionlocal()   
+# Session test (properly closed to prevent leaking connections on import)
+try:
+    test_db = Sessionlocal()
     logger.info("Session created successfully")
+    test_db.close()  # 🟢 Closed session to prevent connection leaks on module import
 except Exception as e:
-    logger.error(f"Session creation failed: {e}") 
-    
-
-
+    logger.error(f"Session creation failed: {e}")

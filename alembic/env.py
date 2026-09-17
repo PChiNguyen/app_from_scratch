@@ -1,36 +1,38 @@
 from logging.config import fileConfig
+import os 
 
+from dotenv import load_dotenv 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from db.base import Base 
-from core.config import settings
-from db.models.user import User, UserRole
-from db.models.classroom import Classroom, Type
-from db.models.student import Student, ovr_aim
-from db.models.skill import SkillModel 
-from db.models.student_score import StudentScore 
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
+
+# 🟢 1. Load environment variables from .env
+load_dotenv()
+
+# Alembic Config object
 config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
+# 🟢 2. Dynamically set database URL from settings or .env file
+DATABASE_URL = os.getenv("DATABASE_URL") or getattr(settings, "SQLALCHEMY_DATABASE_URL", None)
+
+if DATABASE_URL:
+    config.set_main_option("sqlalchemy.url", DATABASE_URL)
+
+# Setup loggers
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata 
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
+from db.base import Base 
+from core.config import settings
+from db.models.user import User, UserRole
+from db.models.classroom import Classroom
+from db.models.student import Student, OverallAim
+from db.models.skill import SkillModel 
+from db.models.student_score import StudentScore, BandScore 
+# Set metadata for 'autogenerate' support
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
