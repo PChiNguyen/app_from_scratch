@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 # db.models 
 from db.models.student import Student 
 from db.models.classroom import Classroom 
-from db.models.student_score import StudentScore, band_score 
+from db.models.student_score import StudentScore, BandScore
 from db.models.skill import SkillModel 
 
 # uuid
@@ -29,12 +29,12 @@ class GradingRepo:
 
     def _build_overall_band_score(self, classroom_id:uuid.UUID): 
         numeric_score = case(
-    (StudentScore.score == band_score.band6, 6.0),
-    (StudentScore.score == band_score.band6_5, 6.5),
-    (StudentScore.score == band_score.band7, 7.0),
-    (StudentScore.score == band_score.band7_5, 7.5),
-    else_=None
-)
+            (StudentScore.score == BandScore.BAND_6_0, 6.0),
+            (StudentScore.score == BandScore.BAND_6_5, 6.5),
+            (StudentScore.score == BandScore.BAND_7_0, 7.0),
+            (StudentScore.score == BandScore.BAND_7_5, 7.5),
+            else_=None
+        )
         overall_band_score_calc = func.round(
             cast(func.sum(numeric_score) / 4, Numeric), 
             2

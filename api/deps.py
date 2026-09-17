@@ -10,6 +10,7 @@ from core.config import settings
 from db.models.user import User, UserRole
 from services.user_service import UserService 
 from schemas.auth_schemas import TokenPayload    
+from core.exceptions import ResourceNotFoundError 
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")     
@@ -30,8 +31,7 @@ def get_current_user(
 
     user = UserService(db).get_user_by_id(token_data.sub)
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                             detail="User not found")
+        raise ResourceNotFoundError
     return user
 
 

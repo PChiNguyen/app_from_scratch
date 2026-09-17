@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict, Field, EmailStr, field_validator
-from db.models.student_score import StudentScore, band_score 
+from db.models.student_score import StudentScore, BandScore 
 from uuid import UUID 
 from typing import Optional
 import re  
@@ -7,14 +7,14 @@ import re
 class StudentScoreBase(BaseModel):
     student_id: UUID
     skill_id: int 
-    score: band_score 
+    score: BandScore
 
 class StudentScoreCreate(StudentScoreBase):
     pass
 
 class StudentScoreUpdate(StudentScoreBase):
     skill_id: Optional[int] = None
-    score: Optional[band_score] = None
+    score: Optional[BandScore] = None
 
 class StudentScoreResponse(StudentScoreBase):
     id: UUID      

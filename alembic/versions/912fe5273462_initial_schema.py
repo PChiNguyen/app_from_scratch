@@ -1,8 +1,8 @@
 """initial_schema
 
-Revision ID: 2f108a414bdb
+Revision ID: 912fe5273462
 Revises: 
-Create Date: 2026-08-09 22:29:34.172549
+Create Date: 2026-09-07 22:52:57.586823
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '2f108a414bdb'
+revision: str = '912fe5273462'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -36,7 +36,7 @@ def upgrade() -> None:
     )
     op.create_table('classrooms',
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('name', sa.Enum('number1_', 'number2_', 'number3_', 'number4_', name='type'), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('teacher_id', sa.UUID(), nullable=False),
     sa.ForeignKeyConstraint(['teacher_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -45,7 +45,7 @@ def upgrade() -> None:
     op.create_table('students',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('overall_aim', sa.Enum('aim1', 'aim2', 'aim3', 'aim4', name='ovr_aim'), nullable=False),
+    sa.Column('overall_aim', sa.Enum('AIM_6_0', 'AIM_7_0', 'AIM_8_0', 'AIM_9_0', name='overallaim'), nullable=False),
     sa.Column('classroom_id', sa.UUID(), nullable=False),
     sa.ForeignKeyConstraint(['classroom_id'], ['classrooms.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -53,8 +53,8 @@ def upgrade() -> None:
     op.create_table('student_score',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('student_id', sa.UUID(), nullable=False),
-    sa.Column('score', sa.Enum('band6', 'band6_5', 'band7', 'band7_5', name='band_score'), nullable=True),
     sa.Column('skill_id', sa.Integer(), nullable=False),
+    sa.Column('score', sa.Enum('BAND_6_0', 'BAND_6_5', 'BAND_7_0', 'BAND_7_5', name='bandscore'), nullable=True),
     sa.ForeignKeyConstraint(['skill_id'], ['skills.id'], ),
     sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
     sa.PrimaryKeyConstraint('id')

@@ -1,6 +1,7 @@
-from db.models.skill import SkillModel
 from sqlalchemy.orm import Session 
-import uuid 
+from sqlalchemy.exc import SQLAlchemyError
+from db.models.skill import SkillModel
+from core.exceptions import DatabaseValidationError
 
 
 class SkillRepo:
@@ -14,15 +15,15 @@ class SkillRepo:
             self.db_session.commit()
             self.db_session.refresh(skill) 
             return skill
-        except Exception as e:
+        except SQLAlchemyError as e:
             self.db_session.rollback()
-            raise e   
+            raise DatabaseValidationError(message=f"Failed to create skill: {str(e)}")
 
     def get_all(self):
         return self.db_session.query(SkillModel).all()
+
     def get_by_id(self, skill_id: int):
         return self.db_session.query(SkillModel).filter(SkillModel.id == skill_id).first()
-    def get_by_name(self, skill_name: str):
-        return self.db_session.query(SkillModel).filter(SkillModel.name == skill_name).first() 
 
-    
+    def get_by_name(self, skill_name: str):
+        return self.db_session.query(SkillModel).filter(SkillModel.name == skill_name).first()

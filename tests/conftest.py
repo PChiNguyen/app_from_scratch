@@ -7,8 +7,8 @@ import logging
 from db.base import Base
 from db.models.classroom import Classroom
 from db.models.skill import SkillModel, Skill
-from db.models.student_score import StudentScore, band_score
-from db.models.student import Student
+from db.models.student_score import StudentScore, BandScore
+from db.models.student import OverallAim, Student
 from db.models.user import User, UserRole
 from main import app 
 from api.deps import get_db 
@@ -17,7 +17,14 @@ from services.user_service import UserService
 from schemas.user_schemas import UserCreate 
 from api.deps import get_current_user 
 
- 
+
+ # tests/conftest.py
+import pytest
+import os
+from dotenv import load_dotenv
+
+# 🟢 Nạp tệp .env ngay khi pytest khởi chạy
+load_dotenv()
 
 
 logging.basicConfig(
@@ -53,10 +60,10 @@ def mock_full_student_scores(
     Total: (7.0 + 6.0 + 6.0 + 6.0) / 4 = 6.25 Overall Band Score.
     """
     score_entries = [
-        (band_score.band7, mock_skills[Skill.SPEAKING].id),
-        (band_score.band6, mock_skills[Skill.WRITING].id),
-        (band_score.band6, mock_skills[Skill.LISTENING].id),
-        (band_score.band6, mock_skills[Skill.READING].id),
+        (BandScore.BAND_7_0, mock_skills[Skill.SPEAKING].id),
+        (BandScore.BAND_6_0, mock_skills[Skill.WRITING].id),
+        (BandScore.BAND_6_0, mock_skills[Skill.LISTENING].id),
+        (BandScore.BAND_6_0, mock_skills[Skill.READING].id),
     ]
 
     student_scores = [
@@ -83,10 +90,10 @@ def mock_user(db_session: Session):
 
 @pytest.fixture
 def mock_classroom(db_session: Session, mock_user: User):
-    from db.models.classroom import Classroom, Type
+    from db.models.classroom import Classroom
     import uuid
     classroom = Classroom(
-        name=Type.number1_,
+        name='haha',
         teacher_id=mock_user.id
     )
     db_session.add(classroom)
@@ -96,11 +103,11 @@ def mock_classroom(db_session: Session, mock_user: User):
 
 @pytest.fixture
 def mock_student(db_session: Session, mock_classroom: Classroom):
-    from db.models.student import Student, ovr_aim
+    from db.models.student import Student, OverallAim
     import uuid
     student = Student(
         name="John Doe",
-        overall_aim=ovr_aim.aim1,
+        overall_aim=OverallAim.AIM_6_0,
         classroom_id=mock_classroom.id
     )
     db_session.add(student)
@@ -120,10 +127,10 @@ def mock_skill(db_session: Session):
 
 @pytest.fixture
 def mock_student_score(db_session: Session, mock_student: Student, mock_skill: SkillModel):
-    from db.models.student_score import StudentScore, band_score
+    from db.models.student_score import StudentScore
     student_score = StudentScore(
         student_id=mock_student.id,
-        score=band_score.band7,
+        score=BandScore.BAND_7_0,
         skill_id=mock_skill.id
     )
     db_session.add(student_score)
@@ -215,7 +222,7 @@ def engine():
 
     # 2. Import models so Base can see them
     from db.models.user import User
-    from db.models.classroom import Classroom, Type
+    from db.models.classroom import Classroom
     from db.models.student import Student
     from db.models.skill import Skill, SkillModel
     from db.models.student_score import StudentScore 

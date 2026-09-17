@@ -12,3 +12,47 @@ test-core:
 	pytest -s tests/test_core
 test-api:
 	pytest -s tests/test_api
+
+
+
+watch:
+	python -m pytest_watch -- --cov=. --cov-report=term-missing --cov-report=xml 
+
+run:
+	python -m uvicorn main:app --reload 
+create-user:
+	python create_user.py  
+create-skill:
+	python create_skill.py
+
+
+
+
+up:
+	docker-compose up -d
+
+# 2. Stop the project
+# What it does: Safely shuts down all containers.
+# When to use: When you are done working.
+down:
+	docker-compose down
+
+# 3. Rebuild the project
+# What it does: Re-installs everything from scratch. 
+# When to use: Use this ONLY when you add new things to requirements.txt or change the Dockerfile.
+build:
+	docker-compose up -d --build
+
+# 4. Build/Update the Database Tables
+# What it does: Runs Alembic to create your tables in Postgres.
+# When to use: After you create or change a class in models.py.
+migrate:
+	docker-compose exec api alembic upgrade head
+
+req:
+	pip freeze > requirements.txt
+
+create-user-docker:
+	docker exec -it ielts_api python create_user.py
+create-skill-docker:
+	docker exec -it ielts_api python create_skill.py  

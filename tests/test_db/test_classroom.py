@@ -1,4 +1,4 @@
-from db.models.classroom import Classroom, Type 
+from db.models.classroom import Classroom
 import pytest
 import logging 
 from sqlalchemy.orm import Session 
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def test_create_classroom(db_session: Session, mock_user: User):
     try:
-        classroom = Classroom(name=Type.number1_, teacher_id=mock_user.id)
+        classroom = Classroom(name='haha', teacher_id=mock_user.id)
         db_session.add(classroom)
         db_session.commit()
         logger.info(f"Classroom created successfully: {classroom.name}")

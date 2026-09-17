@@ -7,6 +7,7 @@ from db.models.student_score import StudentScore
 from db.models.skill import SkillModel 
 from fastapi import HTTPException
 import uuid 
+from core.exceptions import ResourceNotFoundError
 
 @pytest.fixture
 def grading_service(db_session: Session):
@@ -19,5 +20,5 @@ def test_get_classroom_overall_band_scores(grading_service: GradingService, mock
     assert classroom_overall_band_scores
 
 def test_get_classroom_overall_band_scores_fails(grading_service: GradingService):
-    with pytest.raises(HTTPException):
+    with pytest.raises(ResourceNotFoundError) as exc_info:
         grading_service.get_classroom_overall_band_scores(uuid.uuid4())

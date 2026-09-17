@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
 
     SQLALCHEMY_DATABASE_URL: str = "sqlite:///./sql_app.db"
+    GEMINI_API_KEY: str = '' 
 
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
 
